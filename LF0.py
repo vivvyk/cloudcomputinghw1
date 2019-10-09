@@ -1,6 +1,6 @@
 import json
 import boto3
-import time
+import random
 
 def lambda_handler(event, context):
     lex_client = boto3.client('lex-runtime')
@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     response = lex_client.post_text(
         botName='ConciergeBot',
         botAlias='waiter',
-        userId= "vk2425prod",
+        userId= event["_id"],
         inputText=event["message"]
     )
 

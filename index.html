@@ -9,9 +9,9 @@
     <link rel="stylesheet" type="text/css" href="bot.css">
   </head>
   <body>
-    
+
     <h1>Dining Concierge Bot</h1>
-    
+
     <script type="text/javascript" src="./apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
     <script type="text/javascript" src="./apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
     <script type="text/javascript" src="./apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
@@ -23,8 +23,8 @@
     <script type="text/javascript" src="./apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
     <script type="text/javascript" src="./apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
     <script type="text/javascript" src="./apiGateway-js-sdk/apigClient.js"></script>
-    
-    
+
+
 
     <div class="botui-app-container" id="bot_frontend">
       <bot-ui></bot-ui>
@@ -34,22 +34,23 @@
     <script>
         var botui = new BotUI('bot_frontend');
         var apigClient = apigClientFactory.newClient();
-        
+
         let msg = "";
-        
+
         botui.message.add({
           content: "This is the dining concierge bot. Ask it for restaurant suggestions in your area!"
         });
-        
-        
+
+        let rid = Math.random().toString(36).substring(7);
+
         function init() {
             botui.action.text({
               action: {
                 placeholder: 'Enter your question here!'
               }
             }).then(function (res) {
-              
-                apigClient.chatbotPost(params={}, body={message:res.value}, additionalParams={}).then(function(result){
+
+                apigClient.chatbotPost(params={}, body={message:res.value, _id:rid}, additionalParams={}).then(function(result){
                   msg = result.data.body;
                   msg = msg.replace(/['"]+/g, '')
                   botui.message.add({
@@ -57,20 +58,20 @@
                     loading: true,
                     content: msg
                   }).then(init());
-                  
+
                 }).catch( function(result){
                   msg = "FAILED! Try again later.";
-                  
+
                   botui.message.add({
                     delay: 2000,
                     loading: true,
                     content: msg
                   }).then(init());
-                  
+
                 });
-            });   
+            });
         }
-        
+
         init();
 
     </script>
